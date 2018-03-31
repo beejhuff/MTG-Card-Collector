@@ -2,3 +2,9 @@ extends partials/header
 
 block content
   h1 Welcome to the MTG Card Collector
+  
+  form(action="/" method="POST")
+    input(type="text" placeholder="Username" name="username")
+    input(type="password" placeholder="Password" name="password")
+      
+    button Submit

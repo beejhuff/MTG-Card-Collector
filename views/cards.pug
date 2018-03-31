@@ -1,0 +1,16 @@
+extends partials/header
+
+block content
+  h1 Cards Page
+  
+  form(action="/cards" method="POST")
+    input(type="text" placeholder="Name" name="name")
+      
+    button Submit
+    
+  hr
+  
+  if cardList
+    for card in cardList
+      h3 #{card.name} | #{card.setName}
+      img(src= card.imageUrl)

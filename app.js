@@ -1,8 +1,10 @@
-const express   = require("express"),
-      mongoose  = require("mongoose"),
-      mtg       = require("mtgsdk");
+const express    = require("express"),
+      mongoose   = require("mongoose"),
+      bodyParser = require("body-parser"),
+      mtg        = require("mtgsdk");
 
-const indexRoutes = require("./routes/index");
+const indexRoutes = require("./routes/index"),
+      cardRoutes  = require("./routes/cards");
 
 const seed = require("./seed");
 
@@ -12,10 +14,12 @@ var app = express();
 
 app.set("view engine", "pug");
 
+// Allows us to use form data in req.body
+app.use(bodyParser.urlencoded({extended: true}));
+
 // Routing
 app.use("/", indexRoutes);
-
-seed();
+app.use("/cards", cardRoutes);
 
 // Start Server
 app.listen(3000, function() {
