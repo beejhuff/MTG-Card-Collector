@@ -4,8 +4,8 @@ const mongoose = require("mongoose"),
 const Card     = require("./models/card");
 
 function addCard(newCard) {
-  var mId  = newCard.multiverseid
-  Card.find({multiverseid: mId}, function(err, foundCard) {
+  var id  = newCard.id
+  Card.find({id: id}, function(err, foundCard) {
     if(foundCard.length == 0) {
       Card.create(newCard, function(err, createdCard) {
         if(err) {

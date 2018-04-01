@@ -9,9 +9,10 @@ router.get("/", function(req, res) {
 });
 
 router.post("/", function(req, res) {
+  console.log(req.body)
   req.body.name = new RegExp(escapeRegex(req.body.name), 'gi');
   Card.find(req.body, function(err, foundCards) {
-    res.render("cards", {pageTitle: "Cards", cardList: foundCards})
+    res.render("cards", {pageTitle: "Cards", cardList: foundCards, colors: ["White", "Red", "Green", "Black", "Blue", "Colourless"]})
   })
 })
 
