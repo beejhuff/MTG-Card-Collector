@@ -1,5 +1,7 @@
 var configData = {
 
+  colors: ["Colourless", "White", "Green", "Red", "Blue", "Black"],
+  supertypes: ["Basic", "Host", "Legendary", "Ongoing", "Snow", "World"]
   
 
 
