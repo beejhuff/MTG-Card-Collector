@@ -9,9 +9,14 @@ router.get("/", function(req, res) {
 });
 
 router.post("/", function(req, res) {
+  req.body.name = new RegExp(escapeRegex(req.body.name), 'gi');
   Card.find(req.body, function(err, foundCards) {
     res.render("cards", {pageTitle: "Cards", cardList: foundCards})
   })
 })
+
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
 
 module.exports = router;
