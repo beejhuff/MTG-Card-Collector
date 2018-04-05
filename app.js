@@ -1,12 +1,13 @@
 const express    = require("express"),
       mongoose   = require("mongoose"),
-      bodyParser = require("body-parser"),
-      mtg        = require("mtgsdk");
+      bodyParser = require("body-parser");
 
 const indexRoutes = require("./routes/index"),
       cardRoutes  = require("./routes/cards");
 
-const seed = require("./seed");
+const Card        = require("./models/card");
+
+const seed        = require("./seed")
 
 mongoose.connect("mongodb://localhost/mtg_card_collector")
 
@@ -20,8 +21,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 // Routing
 app.use("/", indexRoutes);
 app.use("/cards", cardRoutes);
-
-seed();
 
 // Start Server
 app.listen(3000, function() {

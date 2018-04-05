@@ -1,34 +1,38 @@
-const mongoose = require("mongoose"),
-      mtg      = require("mtgsdk");
+const scry     = require("scryfall-sdk"),
+      mongoose = require("mongoose");
 
-const Card     = require("./models/card");
+const Card = require("./models/Card");
 
-function addCard(newCard) {
-  var id  = newCard.id
-  Card.find({id: id}, function(err, foundCard) {
-    if(foundCard.length == 0) {
-      Card.create(newCard, function(err, createdCard) {
-        if(err) {
-          console.log(err)
-        } else {
-          createdCard.save();
-          console.log("Saved " + createdCard.name + " to the database.")
-        }
-      })
+mongoose.connect("mongodb://localhost/mtg_card_collector");
+
+function addCard(card) {
+  Card.findOne({id: card.id}, function(err, foundCard) {
+    if(err) {
+      console.log(err)
+    } else {
+      if(!foundCard) {
+        Card.create(card, function(err, newCard) {
+          if (err) {
+            console.log(err)
+          } else {
+            console.log("Saving " + newCard.name + " to the database...");
+            newCard.save();
+          }
+        })
+      }
     }
   })
 }
 
-function seedDB() {
-
-  var searchStream = mtg.card.all({})
-  searchStream.on("data", card => {
-    addCard(card)
-  });
-
-  searchStream.on("end", () => {
-    console.log("Database updated.")
-  })
-}
-
-module.exports = seedDB;
+Card.remove({}, function(err) {
+  if(err) {
+    console.log(err)
+  } else {
+    console.log("Database Cleared.")
+    scry.Cards.all().on("data", card => {
+      addCard(card);
+    }).on("end", () => {
+      console.log("Database updated.")
+    })
+  }
+});
