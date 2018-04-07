@@ -124,5 +124,7 @@ var cardSchema = new mongoose.Schema({
     coolstuffinc: String
   }
 });
+// If Model is already compiled, then delete and re-compile.
+delete mongoose.connection.models["Card"];
 
-module.exports = mongoose.model("Card", cardSchema);
+module.exports = mongoose.model("Card", cardSchema)

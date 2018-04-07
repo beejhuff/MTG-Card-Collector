@@ -5,9 +5,7 @@ const express    = require("express"),
 const indexRoutes = require("./routes/index"),
       cardRoutes  = require("./routes/cards");
 
-const Card        = require("./models/card");
-
-const seed        = require("./seed")
+const Card        = require("./models/card")
 
 mongoose.connect("mongodb://localhost/mtg_card_collector")
 
