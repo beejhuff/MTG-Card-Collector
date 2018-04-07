@@ -7,6 +7,8 @@ const indexRoutes = require("./routes/index"),
 
 const Card        = require("./models/card")
 
+const findCards   = require("./type_search")
+
 mongoose.connect("mongodb://localhost/mtg_card_collector")
 
 var app = express();
@@ -19,6 +21,10 @@ app.use(bodyParser.urlencoded({extended: true}));
 // Routing
 app.use("/", indexRoutes);
 app.use("/cards", cardRoutes);
+
+findCards("Basic Land, Snow", false).then(results => {
+  console.log(results.length)
+});
 
 // Start Server
 app.listen(3000, function() {
