@@ -16,7 +16,6 @@ router.post("/", function(req, res) {
   }
 
   Card.find({name: req.body.name}, function(err, foundCards) {
-    console.log(foundCards)
     res.render("cards", {pageTitle: "Cards", cardList: foundCards})
   })
 })

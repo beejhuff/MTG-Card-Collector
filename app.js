@@ -21,11 +21,11 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use("/", indexRoutes);
 app.use("/cards", cardRoutes);
 
-// findCards("Legendary Creature - Angel", true).then(results => {
-//   for(let i in results) {
-//     console.log(results[i].name)
-//   }
-// });
+findCards("Basic Land", false).then(results => {
+  for(let i in results) {
+    console.log(results[i].type_line)
+  }
+});
 
 Card.find({type_line: /Avacyn/gi }, (err, cards) => {
   cards.forEach(card => {
