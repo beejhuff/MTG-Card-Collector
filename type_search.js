@@ -5,6 +5,14 @@ const Card = require("./models/Card")
 
 mongoose.connect("mongodb://localhost/mtg_card_collector")
 
+// The following function returns a Promise. It can be called in other files by requiring it and then calling:
+
+/*  findCards(searchTerms, exactMatch).then(results => {
+  returns an Array of the cards that match the search term.
+})
+
+*/
+
 function searchDB(searchTerm) {
   return Card.find({type_line: searchTerm}).exec() // Returns a Promise that is executed when searchDB() is called.
 }

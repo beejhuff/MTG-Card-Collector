@@ -16,15 +16,22 @@ var app = express();
 app.set("view engine", "pug");
 
 // Allows us to use form data in req.body
-app.use(bodyParser.urlencoded({extended: true}));
-
+app.use(bodyParser.urlencoded({extended: true}))
 // Routing
 app.use("/", indexRoutes);
 app.use("/cards", cardRoutes);
 
-findCards("Basic Land, Snow", false).then(results => {
-  console.log(results.length)
-});
+// findCards("Legendary Creature - Angel", true).then(results => {
+//   for(let i in results) {
+//     console.log(results[i].name)
+//   }
+// });
+
+Card.find({type_line: /Avacyn/gi }, (err, cards) => {
+  cards.forEach(card => {
+    console.log(card.name)
+  })
+})
 
 // Start Server
 app.listen(3000, function() {
