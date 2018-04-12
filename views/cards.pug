@@ -2,16 +2,16 @@ extends partials/header
 
 block content
   h1 Cards Page
-  
+
   form(action="/cards" method="POST")
     input(type="text" placeholder="Name" name="name")
     label(for="exactMatch") Exact Match?
     input(type="checkbox" name="exactMatch")
-    
+
     button Submit
-    
+
   hr
-  
+
   if cardList
     for card in cardList
       h2 #{card.name} | #{card.set_name}

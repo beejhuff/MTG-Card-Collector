@@ -5,11 +5,6 @@ const Card     = require("./models/Card")
 
 mongoose.connect("mongodb://localhost/mtg_card_collector");
 
-
-// All data options we want to populate with choices.
-var configOptionsToPopulate = ["layout", "colors", "legalities", "set_name", "rarity", "artist", "border_color"]
-
-// Data config object to export and use to populate search component
 var configOptions = {
   layouts: [],
   colors: [],
@@ -20,43 +15,37 @@ var configOptions = {
   border_colors: []
 }
 
-// Populate configObject with all available choices from the database for each configOption
-optionsToPopulate.forEach(configOption => {
-  Card.distinct(configOption, (err, choices) => {
-    choices.forEach(choice => {
+function getChoices(option) {
+  return Card.distinct(option).exec()
+}
 
-      switch(configOption) {
-        case "layout":
-          configOptions.layouts.push(choice)
-          break
-        case "colors":
-          configOptions.colors.push(choice)
-          break
-        case "legalities":
-          for(var key in choice) {
-            if(!configOptions.legalities.includes(key)) {
-              configOptions.legalities.push(key)
-            }
-          }
-          break
-        case "set_name":
-          configOptions.set_names.push(choice)
-          break
-        case "rarity":
-          configOptions.rarities.push(choice)
-          break
-        case "artist":
-          configOptions.artists.push(choice)
-          break
-        case "border_color":
-          configOptions.border_colors.push(choice)
-          break
-        default:
-          console.log("Something went wrong...");
+async function populateConfigOptions() {
+  var layouts = await getChoices("layout");
+  var colors = await getChoices("colors");
+  var legalities = await getChoices("legalities");
+  var set_names = await getChoices("set_name");
+  var rarities = await getChoices("rarity");
+  var artists = await getChoices("artist");
+  var border_colors = await getChoices("border_color");
+
+  var config = await Promise.all([layouts, colors]).then(() => {
+    configOptions.layouts = layouts;
+    configOptions.colors = colors;
+    configOptions.set_names = set_names;
+    configOptions.rarities = rarities;
+    configOptions.artists = artists;
+    configOptions.border_colors = border_colors;
+
+    for (let i = 0; i < legalities.length; i++) {
+      for (var key in legalities[i]) {
+        if(!configOptions.legalities.includes(key)) {
+          configOptions.legalities.push(key)
+        }
       }
-      console.log(configOptions)
-    })
+    }
+    return configOptions
   })
-})
+  return config
+}
 
-type_line: String
+module.exports = populateConfigOptions;
