@@ -23,7 +23,7 @@ app.use("/", indexRoutes);
 app.use("/cards", cardRoutes);
 
 config().then(configOptions => {
-  console.log(configOptions.rarities)
+  console.log(configOptions)
 })
 
 // Start Server

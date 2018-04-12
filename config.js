@@ -5,47 +5,35 @@ const Card     = require("./models/Card")
 
 mongoose.connect("mongodb://localhost/mtg_card_collector");
 
-var configOptions = {
-  layouts: [],
-  colors: [],
-  legalities: [],
-  set_names: [],
-  rarities: [],
-  artists: [],
-  border_colors: []
-}
+// Create our object to populate with Config Options.
+var configOptions = {}
 
+// Isolate the DB query for ease and modularity
 function getChoices(option) {
   return Card.distinct(option).exec()
 }
 
+
+// Cycle through each config option, waiting on a resolved Promise from getChoices() and assinging the result to a key within configOptions
 async function populateConfigOptions() {
-  var layouts = await getChoices("layout");
-  var colors = await getChoices("colors");
+  configOptions.layouts = await getChoices("layout");
+  configOptions.colors = await getChoices("colors");
+  configOptions.set_names = await getChoices("set_name");
+  configOptions.rarities = await getChoices("rarity");
+  configOptions.artists = await getChoices("artist");
+  configOptions.border_colors = await getChoices("border_color");
+
+  // Legalities is a bit more complicated. We want the keys within the objects in each array, but only once.
   var legalities = await getChoices("legalities");
-  var set_names = await getChoices("set_name");
-  var rarities = await getChoices("rarity");
-  var artists = await getChoices("artist");
-  var border_colors = await getChoices("border_color");
 
-  var config = await Promise.all([layouts, colors]).then(() => {
-    configOptions.layouts = layouts;
-    configOptions.colors = colors;
-    configOptions.set_names = set_names;
-    configOptions.rarities = rarities;
-    configOptions.artists = artists;
-    configOptions.border_colors = border_colors;
-
-    for (let i = 0; i < legalities.length; i++) {
-      for (var key in legalities[i]) {
-        if(!configOptions.legalities.includes(key)) {
-          configOptions.legalities.push(key)
-        }
+  for (let i = 0; i < legalities.length; i++) {
+    for (var key in legalities[i]) {
+      if(configOptions.legalities && !configOptions.legalities.includes(key)) {
+        configOptions.legalities.push(key)
       }
     }
-    return configOptions
-  })
-  return config
+  }
+  return configOptions
 }
 
 module.exports = populateConfigOptions;
